@@ -1,6 +1,6 @@
 import useStyles from '../utils/styles';
 import NextLink from 'next/link';
-
+import Head from 'next/head';
 import {
   AppBar,
   Container,
@@ -9,10 +9,14 @@ import {
   Link,
 } from '@material-ui/core';
 
-export default function Layout({ children }) {
+export default function Layout({ title, description, children }) {
   const styles = useStyles();
   return (
     <>
+      <Head>
+        <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
+        {description && <meta name="description" content={description} />}
+      </Head>
       <AppBar position="static" className={styles.navbar}>
         <Toolbar>
           <NextLink href="/" passHref>
