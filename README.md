@@ -8,3 +8,8 @@
    3. Show product info in second column
    4. Show add to cart action on third column
    5. Add styles
+10. Add MaterialUI Theme
+    1. Create theme
+    2. Use theme provider
+    3. add h1 and h2 styles
+    4. set Theme colors
