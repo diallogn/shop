@@ -39,15 +39,19 @@ export default function Layout({ title, description, children }) {
       },
     },
   });
+
   const styles = useStyles();
+
   return (
     <>
-      <Head>
-        <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
-        {description && <meta name="description" content={description} />}
-      </Head>
       <ThemeProvider theme={theme}>
+        <Head>
+          <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
+          {description && <meta name="description" content={description} />}
+        </Head>
+
         <CssBaseline />
+
         <AppBar position="static" className={styles.navbar}>
           <Toolbar>
             <NextLink href="/" passHref>
@@ -66,11 +70,13 @@ export default function Layout({ title, description, children }) {
             </div>
           </Toolbar>
         </AppBar>
+
+        <Container className={styles.main}>{children}</Container>
+
+        <footer className={styles.footer}>
+          <Typography>All right reserved. Next Amazona.</Typography>
+        </footer>
       </ThemeProvider>
-      <Container className={styles.main}>{children}</Container>
-      <footer className={styles.footer}>
-        <Typography>All right reserved. Next Amazona.</Typography>
-      </footer>
     </>
   );
 }
