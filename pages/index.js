@@ -10,14 +10,16 @@ import {
   Button,
 } from '@material-ui/core';
 import NextLink from 'next/link';
-import data from '../utils/data';
+import db from '../utils/db';
+import Product from '../models/product';
 
-export default function Home() {
+export default function Home(props) {
+  const { products } = props;
   return (
     <Layout>
       <h1>Products</h1>
       <Grid container spacing={3}>
-        {data.products.map((product) => {
+        {products.map((product) => {
           return (
             <Grid item md={4} key={product.name}>
               <Card>
@@ -46,4 +48,15 @@ export default function Home() {
       </Grid>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  await db.connect();
+  const products = await Product.find({}).lean();
+  await db.disconnect();
+  return {
+    props: {
+      products: products.map((prd) => db.convertDocToObj(prd)),
+    },
+  };
 }

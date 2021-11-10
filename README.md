@@ -28,3 +28,8 @@
     2. seed simple data
     3. create api/products/index.js
     4. create product api
+14. Fetch Products from API
+    1. use getServerSideProps()
+    2. get product from db
+    3. return data as props
+    4. use it in the product screen too
