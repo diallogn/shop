@@ -13,3 +13,18 @@
     2. Use theme provider
     3. add h1 and h2 styles
     4. set Theme colors
+11. Create Application context
+    1. define context and reducer
+    2. set dark mode flag
+    3. create store provider
+    4. use it no layout
+12. connect To MongoDB
+    1. install Mongodb
+    2. install mongoose
+    3. define connect and disconnect
+    4. use it in the api
+13. Create products API
+    1. create product model
+    2. seed simple data
+    3. create api/products/index.js
+    4. create product api
