@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import NextLink from 'next/link';
 import Layout from '../../components/Layout';
 import {
@@ -13,16 +13,36 @@ import {
 import useStyles from '../../utils/styles';
 import Image from 'next/image';
 import db from '../../utils/db';
+import { Store } from '../../utils/Store';
 import Product from '../../models/product';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 
-export default function ProductScreen(props) {
+function ProductScreen(props) {
+  const router = useRouter();
+  const { state, dispatch } = useContext(Store);
   const classes = useStyles();
   const { product } = props;
 
   if (!product) {
     return <div>Product Not Found</div>;
   }
-
+  const addToCartHandler = async () => {
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock <= 0) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    const existItem = state.cart.cartItems.find((x) => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    router.push('/cart');
+  };
   return (
     <Layout title={product.name} description={product.description}>
       <div className={classes.section}>
@@ -86,7 +106,12 @@ export default function ProductScreen(props) {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button fullWidth variant="contained" color="primary">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={addToCartHandler}
+                >
                   Add to cart
                 </Button>
               </ListItem>
@@ -110,3 +135,5 @@ export async function getServerSideProps(context) {
     },
   };
 }
+
+export default dynamic(() => Promise.resolve(ProductScreen), { ssr: false });

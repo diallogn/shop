@@ -33,3 +33,19 @@
     2. get product from db
     3. return data as props
     4. use it in the product screen too
+15. Implement add to cart
+    1. define cart in context
+    2. dispatch add to cart context
+    3. set click event handler for button
+16. Create Cart Screen
+    1. create cart.js
+    2. redirect to cart screen
+    3. use dynamic from nextjs
+    4. list items in cart items
+17. Convert cart screen to dynamic component
+    1. Use next/dynamic
+    2. wrap cart in dynamic without ssr
+18. Update Remove Items In Cart
+    1. Implement onChange for Select
+    2. Show notification by notistack
+    3. Implement delete button handler

@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
+import useStyles from '../utils/styles';
+import { Store } from '../utils/Store';
+import Cookies from 'js-cookie';
 import {
   AppBar,
   Container,
@@ -11,14 +14,20 @@ import {
   ThemeProvider,
   CssBaseline,
   Switch,
+  Badge,
 } from '@material-ui/core';
-import useStyles from '../utils/styles';
-import { Store } from '../utils/Store';
-import Cookies from 'js-cookie';
 
 export default function Layout({ title, description, children }) {
+  const styles = useStyles();
   const { state, dispatch } = useContext(Store);
-  const { darkMode } = state;
+  const { darkMode, cart } = state;
+
+  const darkModeHandler = () => {
+    dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
+    const newDarkMode = !darkMode;
+    Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
+  };
+
   const theme = createTheme({
     typography: {
       h1: {
@@ -45,23 +54,15 @@ export default function Layout({ title, description, children }) {
       },
     },
   });
-
-  const styles = useStyles();
-  const darkModeHandler = () => {
-    dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
-    const newDarkMode = !darkMode;
-    Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
-  };
   return (
-    <>
+    <div>
+      <Head>
+        <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
+        {description && <meta name="description" content={description} />}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <ThemeProvider theme={theme}>
-        <Head>
-          <title>{title ? `${title} - Amazona` : 'Amazona'}</title>
-          {description && <meta name="description" content={description} />}
-        </Head>
-
         <CssBaseline />
-
         <AppBar position="static" className={styles.navbar}>
           <Toolbar>
             <NextLink href="/" passHref>
@@ -70,14 +71,25 @@ export default function Layout({ title, description, children }) {
               </Link>
             </NextLink>
             <div className={styles.grow}></div>
+            <Switch checked={darkMode} onChange={darkModeHandler}></Switch>
             <div>
               <NextLink href="/cart" passHref>
-                <Link>Cart</Link>
+                <Link>
+                  {cart.cartItems.length > 0 ? (
+                    <Badge
+                      color="secondary"
+                      badgeContent={cart.cartItems.length}
+                    >
+                      Cart
+                    </Badge>
+                  ) : (
+                    'Cart'
+                  )}
+                </Link>
               </NextLink>
               <NextLink href="/login" passHref>
                 <Link>Login</Link>
               </NextLink>
-              <Switch checked={darkMode} onChange={darkModeHandler}></Switch>
             </div>
           </Toolbar>
         </AppBar>
@@ -85,9 +97,9 @@ export default function Layout({ title, description, children }) {
         <Container className={styles.main}>{children}</Container>
 
         <footer className={styles.footer}>
-          <Typography>All right reserved. Next Amazona.</Typography>
+          <Typography>Amazona &copy; All right reserved.</Typography>
         </footer>
       </ThemeProvider>
-    </>
+    </div>
   );
 }
