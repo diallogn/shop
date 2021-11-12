@@ -57,3 +57,6 @@
 20. Create Sample Users
     1. create user model
     2. add sample user in seed api
+21. Build simple API
+    1. use jsonwebtoken to sign token
+    2. implement login api
