@@ -26,7 +26,6 @@ export default function Layout({ title, description, children }) {
   const classes = useStyles();
   const { state, dispatch } = useContext(Store);
   const { darkMode, cart, userInfo } = state;
-
   const darkModeHandler = () => {
     dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
     const newDarkMode = !darkMode;
