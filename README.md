@@ -65,3 +65,7 @@
     2. add userInfo to context
     3. save userInfo in cookies
     4. show user name in navbar using menu
+23. Create Register Page
+    1. create form
+    2. implement register api
+    3. redirect user to redirect page
