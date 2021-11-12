@@ -60,3 +60,8 @@
 21. Build simple API
     1. use jsonwebtoken to sign token
     2. implement login api
+22. Complete Login Screen
+    1. handle form submission
+    2. add userInfo to context
+    3. save userInfo in cookies
+    4. show user name in navbar using menu

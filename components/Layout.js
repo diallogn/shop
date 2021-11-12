@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import NextLink from 'next/link';
 import Head from 'next/head';
 import useStyles from '../utils/styles';
@@ -15,12 +15,17 @@ import {
   CssBaseline,
   Switch,
   Badge,
+  Button,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
+import { useRouter } from 'next/router';
 
 export default function Layout({ title, description, children }) {
-  const styles = useStyles();
+  const router = useRouter();
+  const classes = useStyles();
   const { state, dispatch } = useContext(Store);
-  const { darkMode, cart } = state;
+  const { darkMode, cart, userInfo } = state;
 
   const darkModeHandler = () => {
     dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
@@ -54,6 +59,20 @@ export default function Layout({ title, description, children }) {
       },
     },
   });
+  const [anchorEl, setAnchorEl] = useState(null);
+  const loginClickHandler = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const loginMenuCloseHandler = () => {
+    setAnchorEl(null);
+  };
+  const logoutClickHandler = () => {
+    setAnchorEl(null);
+    dispatch({ type: 'USER_LOGOUT' });
+    Cookies.remove('userInfo');
+    Cookies.remove('cartItems');
+    router.push('/');
+  };
   return (
     <div>
       <Head>
@@ -63,14 +82,14 @@ export default function Layout({ title, description, children }) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar position="static" className={styles.navbar}>
+        <AppBar position="static" className={classes.navbar}>
           <Toolbar>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={styles.brand}>amazona</Typography>
+                <Typography className={classes.brand}>amazona</Typography>
               </Link>
             </NextLink>
-            <div className={styles.grow}></div>
+            <div className={classes.grow}></div>
             <Switch checked={darkMode} onChange={darkModeHandler}></Switch>
             <div>
               <NextLink href="/cart" passHref>
@@ -87,16 +106,42 @@ export default function Layout({ title, description, children }) {
                   )}
                 </Link>
               </NextLink>
-              <NextLink href="/login" passHref>
-                <Link>Login</Link>
-              </NextLink>
+              {userInfo ? (
+                <>
+                  <Button
+                    aria-controls="simple-menu"
+                    aria-haspopup={true}
+                    onClick={loginClickHandler}
+                    className={classes.navbarButton}
+                  >
+                    {userInfo.name}
+                  </Button>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={loginMenuCloseHandler}
+                  >
+                    <MenuItem onClick={loginMenuCloseHandler}>Profile</MenuItem>
+                    <MenuItem onClick={loginMenuCloseHandler}>
+                      My account
+                    </MenuItem>
+                    <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <NextLink href="/login" passHref>
+                  <Link>Login</Link>
+                </NextLink>
+              )}
             </div>
           </Toolbar>
         </AppBar>
 
-        <Container className={styles.main}>{children}</Container>
+        <Container className={classes.main}>{children}</Container>
 
-        <footer className={styles.footer}>
+        <footer className={classes.footer}>
           <Typography>Amazona &copy; All right reserved.</Typography>
         </footer>
       </ThemeProvider>
