@@ -95,3 +95,6 @@
     1. create api to order info
     2. create payment, shipping and items
     3. create order summary
+30. Display Orders History
+    1. create orders api
+    2. show orders in profile screen
