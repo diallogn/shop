@@ -81,3 +81,7 @@
     1. create form
     2. add radio button
     3. save method in context
+27. Create Place Order Page
+    1. display order info
+    2. show order summary
+    3. add place order button
