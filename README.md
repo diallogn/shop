@@ -85,3 +85,9 @@
     1. display order info
     2. show order summary
     3. add place order button
+28. Implement Place Order Action
+    1. create click handler
+    2. send ajax request
+    3. clear cart
+    4. redirect to order screen
+    5. reate backend api

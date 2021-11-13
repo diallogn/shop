@@ -33,7 +33,8 @@ function PlaceOrder() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
-    cart: { userInfo, cartItems, shippingAddress, paymentMethod },
+    userInfo,
+    cart: { cartItems, shippingAddress, paymentMethod },
   } = state;
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; //123.456 => 123.46
   const itemsPrice = round2(
@@ -41,14 +42,17 @@ function PlaceOrder() {
   );
   const shippingPrice = itemsPrice > 200 ? 0 : 15;
   const taxPrice = round2(itemsPrice * 0.15);
-  const totalPrice = round2(itemsPrice + shippingPrice, taxPrice);
+  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
   useEffect(() => {
     if (!paymentMethod) {
       router.push('/payment');
     }
+    if(cartItems.length === 0){
+      router.push('/cart')
+    }
   });
-  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
   const placeOrderHandler = async () => {
     closeSnackbar();
     try {
@@ -79,7 +83,6 @@ function PlaceOrder() {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
-
   return (
     <Layout title="Shopping cart">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
@@ -151,8 +154,8 @@ function PlaceOrder() {
                             <TableCell align="right">
                               <Typography>$ {item.price}</Typography>
                             </TableCell>
-                          </TableRow>,
-                        );
+                          </TableRow>
+                        ,);
                       })}
                     </TableBody>
                   </Table>
