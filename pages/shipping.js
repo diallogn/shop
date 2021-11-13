@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import CheckoutWizard from '../components/checkoutWizard';
+import CheckoutWizard from '../components/CheckoutWizard';
 
 function Shipping() {
   const {

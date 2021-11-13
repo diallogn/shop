@@ -77,3 +77,7 @@
     1. create form
     2. add address fields
     3. save in Context and Cookies
+26. Create Payment Page
+    1. create form
+    2. add radio button
+    3. save method in context
