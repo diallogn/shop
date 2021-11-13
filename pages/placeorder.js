@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  CircularProgress,
   Grid,
   Link,
   List,
@@ -13,7 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import { Store } from '../utils/Store';
 import NextLink from 'next/link';
@@ -22,13 +23,17 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import useStyles from '../utils/styles';
 import CheckoutWizard from '../components/CheckoutWizard';
+import { useSnackbar } from 'notistack';
+import { getError } from '../utils/error';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function PlaceOrder() {
   const classes = useStyles();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const {
-    cart: { cartItems, shippingAddress, paymentMethod },
+    cart: { userInfo, cartItems, shippingAddress, paymentMethod },
   } = state;
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; //123.456 => 123.46
   const itemsPrice = round2(
@@ -37,11 +42,44 @@ function PlaceOrder() {
   const shippingPrice = itemsPrice > 200 ? 0 : 15;
   const taxPrice = round2(itemsPrice * 0.15);
   const totalPrice = round2(itemsPrice + shippingPrice, taxPrice);
-  useEffect(()=>{
-    if(!paymentMethod){
-      router.push('/payment')
+  useEffect(() => {
+    if (!paymentMethod) {
+      router.push('/payment');
     }
-  })
+  });
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
+  const placeOrderHandler = async () => {
+    closeSnackbar();
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        '/api/orders',
+        {
+          orderItems: cartItems,
+          shippingAddress,
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          taxPrice,
+          totalPrice,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      dispatch({ type: 'CART_CLEAR' });
+      Cookies.remove('cartItems');
+      setLoading(false);
+      router.push(`/order/${data._id}`);
+    } catch (err) {
+      setLoading(false);
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
+
   return (
     <Layout title="Shopping cart">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
@@ -102,7 +140,6 @@ function PlaceOrder() {
                                 </Link>
                               </NextLink>
                             </TableCell>
-
                             <TableCell>
                               <NextLink href={`/product/${item.slug}`} passHref>
                                 <Link>
@@ -114,8 +151,8 @@ function PlaceOrder() {
                             <TableCell align="right">
                               <Typography>$ {item.price}</Typography>
                             </TableCell>
-                          </TableRow>
-                        ,);
+                          </TableRow>,
+                        );
                       })}
                     </TableBody>
                   </Table>
@@ -174,15 +211,27 @@ function PlaceOrder() {
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography align="right"><strong>$ {totalPrice}</strong></Typography>
+                    <Typography align="right">
+                      <strong>$ {totalPrice}</strong>
+                    </Typography>
                   </Grid>
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button variant="contained" color="primary" fullWidth>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={placeOrderHandler}
+                >
                   Place Order
                 </Button>
               </ListItem>
+              {loading && (
+                <ListItem>
+                  <CircularProgress />
+                </ListItem>
+              )}
             </List>
           </Card>
         </Grid>
