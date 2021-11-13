@@ -91,3 +91,7 @@
     3. clear cart
     4. redirect to order screen
     5. reate backend api
+29. Create Order Details Page
+    1. create api to order info
+    2. create payment, shipping and items
+    3. create order summary

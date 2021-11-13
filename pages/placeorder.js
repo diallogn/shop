@@ -52,7 +52,9 @@ function PlaceOrder() {
     }
   });
   const [loading, setLoading] = useState(false);
+  
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+
   const placeOrderHandler = async () => {
     closeSnackbar();
     try {
@@ -84,7 +86,7 @@ function PlaceOrder() {
     }
   };
   return (
-    <Layout title="Shopping cart">
+    <Layout title="Place Order">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
       <Typography component="h1" variant="h1">
         Place Order
