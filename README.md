@@ -98,3 +98,6 @@
 30. Display Orders History
     1. create orders api
     2. show orders in profile screen
+31. Update User Profile
+    1. create profile screen
+    2. create update profile api

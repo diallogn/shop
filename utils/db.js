@@ -16,9 +16,9 @@ async function connect() {
     await mongoose.disconnect();
   }
   const db = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-    useNewUrlParser: true,
   });
   console.log('new connection');
   connection.isConnected = db.connections[0].readyState;
@@ -43,5 +43,4 @@ function convertDocToObj(doc) {
 }
 
 const db = { connect, disconnect, convertDocToObj };
-
 export default db;

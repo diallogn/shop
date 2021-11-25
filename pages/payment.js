@@ -1,3 +1,10 @@
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
+import React, { useContext, useEffect, useState } from 'react';
+import { Store } from '../utils/Store';
+import Layout from '../components/Layout';
+import CheckoutWizard from '../components/CheckoutWizard';
+import useStyles from '../utils/styles';
 import {
   Button,
   FormControl,
@@ -8,26 +15,17 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
-import CheckoutWizard from '../components/CheckoutWizard';
-import Layout from '../components/Layout';
-import { Store } from '../utils/Store';
-import useStyles from '../utils/styles';
-import Cookies from 'js-cookie';
-import dynamic from 'next/dynamic';
 import { useSnackbar } from 'notistack';
 
-function Payment() {
-  const styles = useStyles();
+export default function Payment() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const classes = useStyles();
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState('');
   const { state, dispatch } = useContext(Store);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const {
     cart: { shippingAddress },
   } = state;
-
   useEffect(() => {
     if (!shippingAddress.address) {
       router.push('/shipping');
@@ -36,8 +34,8 @@ function Payment() {
     }
   }, []);
   const submitHandler = (e) => {
-    e.preventDefault();
     closeSnackbar();
+    e.preventDefault();
     if (!paymentMethod) {
       enqueueSnackbar('Payment method is required', { variant: 'error' });
     } else {
@@ -49,7 +47,7 @@ function Payment() {
   return (
     <Layout title="Payment Method">
       <CheckoutWizard activeStep={2}></CheckoutWizard>
-      <form className={styles.form} onSubmit={submitHandler}>
+      <form className={classes.form} onSubmit={submitHandler}>
         <Typography component="h1" variant="h1">
           Payment Method
         </Typography>
@@ -63,8 +61,8 @@ function Payment() {
                 onChange={(e) => setPaymentMethod(e.target.value)}
               >
                 <FormControlLabel
-                  label="Paypal"
-                  value="Paypal"
+                  label="PayPal"
+                  value="PayPal"
                   control={<Radio />}
                 ></FormControlLabel>
                 <FormControlLabel
@@ -100,4 +98,3 @@ function Payment() {
     </Layout>
   );
 }
-export default dynamic(() => Promise.resolve(Payment), { ssr: false });

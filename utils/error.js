@@ -5,6 +5,5 @@ const getError = (err) =>
 
 const onError = async (err, req, res, next) => {
   res.status(500).send({ message: err.toString() });
-  next();
 };
 export { getError, onError };

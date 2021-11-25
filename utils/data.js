@@ -1,17 +1,16 @@
 import bcrypt from 'bcryptjs';
-
-const Data = {
+const data = {
   users: [
     {
-      name: 'admin',
-      email: 'admin@amazona.com',
-      password: bcrypt.hashSync('admin'),
+      name: 'John',
+      email: 'admin@example.com',
+      password: bcrypt.hashSync('123456'),
       isAdmin: true,
     },
     {
-      name: 'Abdoulaye Diallo',
-      email: 'user@amazona.com',
-      password: bcrypt.hashSync('normal'),
+      name: 'Jane',
+      email: 'user@example.com',
+      password: bcrypt.hashSync('123456'),
       isAdmin: false,
     },
   ],
@@ -21,24 +20,28 @@ const Data = {
       slug: 'free-shirt',
       category: 'Shirts',
       image: '/images/shirt1.jpg',
+      isFeatured: true,
+      featuredImage: '/images/banner1.jpg',
       price: 70,
       brand: 'Nike',
       rating: 4.5,
       numReviews: 10,
       countInStock: 20,
-      description: 'A propular shirt',
+      description: 'A popular shirt',
     },
     {
       name: 'Fit Shirt',
       slug: 'fit-shirt',
       category: 'Shirts',
       image: '/images/shirt2.jpg',
+      isFeatured: true,
+      featuredImage: '/images/banner2.jpg',
       price: 80,
       brand: 'Adidas',
       rating: 4.2,
       numReviews: 10,
-      countInStock: 23,
-      description: 'A propular shirt',
+      countInStock: 20,
+      description: 'A popular shirt',
     },
     {
       name: 'Slim Shirt',
@@ -50,7 +53,7 @@ const Data = {
       rating: 4.5,
       numReviews: 10,
       countInStock: 20,
-      description: 'A propular shirt',
+      description: 'A popular shirt',
     },
     {
       name: 'Golf Pants',
@@ -69,12 +72,12 @@ const Data = {
       slug: 'fit-pants',
       category: 'Pants',
       image: '/images/pants2.jpg',
-      price: 70,
-      brand: 'Jordan',
+      price: 95,
+      brand: 'Zara',
       rating: 4.5,
       numReviews: 10,
       countInStock: 20,
-      description: 'Smart looking pants',
+      description: 'A popular pants',
     },
     {
       name: 'Classic Pants',
@@ -82,13 +85,12 @@ const Data = {
       category: 'Pants',
       image: '/images/pants3.jpg',
       price: 75,
-      brand: 'Gucci',
+      brand: 'Casely',
       rating: 4.5,
       numReviews: 10,
       countInStock: 20,
-      description: 'Smart looking pants',
+      description: 'A popular pants',
     },
   ],
 };
-
-export default Data;
+export default data;

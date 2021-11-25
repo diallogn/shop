@@ -8,6 +8,7 @@ const signToken = (user) => {
       email: user.email,
       isAdmin: user.isAdmin,
     },
+
     process.env.JWT_SECRET,
     {
       expiresIn: '30d',
@@ -28,7 +29,15 @@ const isAuth = async (req, res, next) => {
       }
     });
   } else {
-    res.status(401).send({ message: 'Token is not supplied' });
+    res.status(401).send({ message: 'Token is not suppiled' });
   }
 };
-export { signToken, isAuth };
+const isAdmin = async (req, res, next) => {
+  if (req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401).send({ message: 'User is not admin' });
+  }
+};
+
+export { signToken, isAuth, isAdmin };

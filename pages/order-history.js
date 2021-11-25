@@ -1,28 +1,28 @@
-import React, { useContext, useEffect, useReducer } from 'react';
+import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { Store } from '../utils/Store';
-import axios from 'axios';
-import { getError } from '../utils/error';
-import Layout from '../components/Layout';
-import useStyles from '../utils/styles';
 import NextLink from 'next/link';
+import React, { useEffect, useContext, useReducer } from 'react';
 import {
-  Button,
-  Card,
   CircularProgress,
   Grid,
   List,
   ListItem,
-  ListItemText,
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Typography,
+  Card,
+  Table,
   TableHead,
   TableRow,
-  Typography,
+  TableCell,
+  TableBody,
+  Button,
+  ListItemText,
 } from '@material-ui/core';
+import { getError } from '../utils/error';
+import { Store } from '../utils/Store';
+import Layout from '../components/Layout';
+import useStyles from '../utils/styles';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -39,9 +39,9 @@ function reducer(state, action) {
 
 function OrderHistory() {
   const { state } = useContext(Store);
-  const { userInfo } = state;
   const router = useRouter();
   const classes = useStyles();
+  const { userInfo } = state;
 
   const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
     loading: true,
@@ -53,7 +53,6 @@ function OrderHistory() {
     if (!userInfo) {
       router.push('/login');
     }
-
     const fetchOrders = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
@@ -68,7 +67,7 @@ function OrderHistory() {
     fetchOrders();
   }, []);
   return (
-    <Layout title={'Order History'}>
+    <Layout title="Order History">
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -113,32 +112,28 @@ function OrderHistory() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {orders.map((order) => {
-                          return (
-                            <TableRow key={order._id}>
-                              <TableCell>
-                                {order._id.substring(20, 24)}
-                              </TableCell>
-                              <TableCell>{order.createdAt}</TableCell>
-                              <TableCell>$ {order.totalPrice}</TableCell>
-                              <TableCell>
-                                {order.isPaid
-                                  ? `Paid at ${order.paidAt}`
-                                  : 'Not paid'}
-                              </TableCell>
-                              <TableCell>
-                                {order.isDelivered
-                                  ? `Delivered at ${order.deliveredAt}`
-                                  : 'Not delivered'}
-                              </TableCell>
-                              <TableCell>
-                                <NextLink href={`/order/${order._id}`} passHref>
-                                  <Button variant="contained">Details</Button>
-                                </NextLink>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
+                        {orders.map((order) => (
+                          <TableRow key={order._id}>
+                            <TableCell>{order._id.substring(20, 24)}</TableCell>
+                            <TableCell>{order.createdAt}</TableCell>
+                            <TableCell>${order.totalPrice}</TableCell>
+                            <TableCell>
+                              {order.isPaid
+                                ? `paid at ${order.paidAt}`
+                                : 'not paid'}
+                            </TableCell>
+                            <TableCell>
+                              {order.isDelivered
+                                ? `delivered at ${order.deliveredAt}`
+                                : 'not delivered'}
+                            </TableCell>
+                            <TableCell>
+                              <NextLink href={`/order/${order._id}`} passHref>
+                                <Button variant="contained">Details</Button>
+                              </NextLink>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
